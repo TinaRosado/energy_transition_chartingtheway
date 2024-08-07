@@ -1,4 +1,10 @@
 # energy_transition_chartingtheway
+
+
+## Project Title
+Charting the Way: Reflecting on Three Decades of Energy Transition 
+
+## Project Overview 
 In 1992, the United Nations Framework Convention on Climate Change marked a pivotal moment by affirming the scientific consensus on the role of greenhouse gas emissions in global warming. This collective acknowledgment spurred action, culminating in the signing of the Kyoto Protocol in December 1997 by 192 state parties, committing to reducing greenhouse gas emissions. But how has this commitment translated into action?
 
 This exploratory visualization traces the change in energy consumption since 1992, distinguishing between fossil fuel sources and low-carbon alternatives. It prompts us to consider whether our collective pursuit of transitioning to low-carbon sources aligns with the necessary momentum for meaningful change. Are we headed in the right direction?
@@ -13,8 +19,8 @@ Project Overview
 
 This project was a final deliverable for an academic course in the MFA in Information Design and Data Visualization. 
 
-#Product  
+## Product  
 Dynamic data visualization for the web.
 
-#Content 
+## Content 
 A comparison of the change in energy consumption by country from 1992 to 2022. 
