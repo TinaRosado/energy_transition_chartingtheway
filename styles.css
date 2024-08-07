@@ -1,0 +1,109 @@
+.grid-layout {
+    display: grid; 
+    grid-template-columns: 0.25fr 1fr 0.25fr; 
+    gap: 20px; 
+    padding: 10px;
+}
+
+.title{
+    grid-column: 2 / span 1;
+}
+
+.title-image{
+    grid-column: 1 / span 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* For Chrome, Safari, and Opera */
+#yearSlider::-webkit-slider-thumb {
+    background-color: #5300BF; /* Set the color of the slider bubble */
+}
+
+
+#selectedYearText {
+    font-family: "Jura", sans-serif; /* Use the Jura font */
+    font-weight: 700; /* Set font weight */
+    font-style: normal; /* Set font style */
+    font-size: 27px; /* Set font size similar to heading 2 */
+    color: #5300BF ; /* Set text color */
+}
+
+.main-content{
+    grid-column: 2 / span 1;
+}
+
+svg {
+    background-image: url("backgroundDLayer3.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: left;
+    padding: 8px;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 10px;
+    color: #5300BF;
+    background: white;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none; /* Don't interfere with mouse events */
+    opacity: 0; /* Start invisible */
+}
+
+
+
+h1{
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 41px;
+    color:#5300BF;
+
+}
+h2{
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 27px;
+    color:black;
+
+}
+
+h3{
+    font-family: "Jura", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 14px;
+    color:#5300BF;
+
+}
+
+p {
+    font-family: 'Gill Sans', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    font-size: 14px;
+    
+}
+
+
+
+
+/* 
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 300 to 700
+
+//.jura-<uniquifier> {
+//  font-family: "Jura", sans-serif;
+//  font-optical-sizing: auto;
+//  font-weight: <weight>;
+//  font-style: normal;}
+ */

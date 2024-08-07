@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Consumption Difference from 1992</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">
+
+    <style>
+
+    </style>
+</head>
+
+<body class="grid-layout">
+    <div class="title-image">
+        <img src="compass-2.png" alt="compass icon" style="max-width: 80px;">
+        <style>
+            .title-image img {
+                transform: rotate(130deg); /* Rotate the image 130 degrees clockwise */
+            }
+        </style>
+
+
+    </div>
+    <div class="title">
+        <h1>Charting the Way</h1>
+    </div>
+    
+    <div class="main-content">
+        <h2>Reflecting on Three Decades of Energy Transition</h2>
+        <p>In 1992, the United Nations Framework Convention on Climate Change marked a pivotal moment, affirming the scientific consensus on the role of greenhouse gas emissions in global warming. This collective acknowledgment spurred action, culminating in the signing of the Kyoto Protocol in December 1997 by 192 state parties, committing to reducing greenhouse gas emissions.</p>
+        <p>This exploratory visualization traces the annual changes in energy consumption since 1992, distinguishing between fossil fuel sources and low-carbon alternatives. It prompts us to consider whether our collective pursuit of transitioning to low-carbon sources aligns with the necessary momentum for meaningful change. However, it also raises important questions: Is this transition path universally applicable, or must it be tailored to each nation's unique circumstances? Where have our past efforts led us, and what lies ahead?</p>
+        <p>These initial inquiries merely scratch the surface of our exploration. Deeper questions emerge as we delve into the data: Why do certain nations diverge from the main trajectory, becoming outliers in the transition process? What underlying factors drive the observed patterns, such as the intriguing convergence trend between fossil and low-carbon sources?</p>
+        <p>We invite you to embrace a journey of discovery and curiosity as you take a few minutes to study the results of three decades of human endeavor, striving to overcome one of mankind's greatest challenges.</p>
+    </div>
+   
+    
+    <div id="sliderSection" class="main-content">
+        <input type="range" id="yearSlider" min="1992" max="2022" step="1" value="1992">
+        <span id="selectedYearText">1992</span>
+    </div>
+    
+
+   
+    <div id="my_dataviz" class="main-content">
+
+             <script>
+            const margin = { top: 30, right: 30, bottom: 30, left: 30 },
+                width = 660 - margin.left - margin.right,
+                height = 660 - margin.top - margin.bottom;
+
+            // Append the SVG object to the body of the page
+            const svg = d3.select("#my_dataviz")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+            // Create a tooltip element
+            const tooltip = d3.select("body")
+                .append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            // Define functions to show and hide the tooltip
+            const showTooltip = (d, event) => {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+
+               
+
+                    tooltip.html(`<strong>Country:</strong> ${d.country}<br><strong>Year:</strong> ${d.year}<br><strong>Total Fossil:</strong> ${Math.round(d.fossil)} TWh<br><strong>1992 Change:</strong> ${Math.round(d.fossilDiff)} TWh<br><strong>Total Low-Carbon:</strong> ${Math.round(d.lowcarbon)} TWh<br><strong>1992 Change:</strong> ${Math.round(d.lowcarbonDiff)} TWh`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            };
+
+            const hideTooltip = () => {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            };
+
+            // Load the data
+            d3.csv("EnergyConsumption/data/energy_consumption_rankings.csv")
+                .then(function (data) {
+                    // Group data by country
+                    const nestedData = d3.group(data, d => d.country);
+
+                    // Filter data for the year 1992 for each country
+                    const data1992ByCountry = new Map();
+                    nestedData.forEach((value, key) => {
+                        const data1992 = value.find(d => +d.year === 1992);
+                        if (data1992) {
+                            data1992ByCountry.set(key, data1992);
+                        }
+                    });
+
+                    // Calculate the difference for each year from 1992 to 2022
+                    const dataDifferences = [];
+                    nestedData.forEach((value, key) => {
+                        const data1992 = data1992ByCountry.get(key);
+                        if (data1992) {
+                            const differences = value.map(d => ({
+                                code: d.code,
+                                country: d.country,
+                                lowcarbon: +d.lowcarbon,
+                                fossil: +d.fossil,
+                                year: +d.year,
+                                lowcarbonDiff: +d.lowcarbon - data1992.lowcarbon,
+                                fossilDiff: +d.fossil - data1992.fossil
+                            }));
+                            dataDifferences.push(...differences);
+                        }
+                    });
+
+                    // Find the maximum absolute difference for lowcarbon and fossil
+                    const maxDiff = d3.max(dataDifferences, d => Math.max(Math.abs(d.lowcarbonDiff), Math.abs(d.fossilDiff)));
+
+                    // Create scales with the symlog scale
+                    const x = d3.scaleSymlog()
+                        .domain([-maxDiff, maxDiff])
+                        .range([0, width]);
+
+                    const y = d3.scaleSymlog()
+                        .domain([-maxDiff, maxDiff])
+                        .range([height, 0]);
+
+                    // Append the line path once outside of the update function
+                    const linePath = svg.append("path")
+                        .attr("class", "linePath")
+                        .style("fill", "none")
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .style("opacity", 0.3);
+
+                    function updateCircles(selectedYear) {
+                        // Filter data for the selected year and the previous year
+                        const currentYearData = dataDifferences.filter(d => d.year === selectedYear);
+                        const prevYearData = (selectedYear === 1992) ? [] : dataDifferences.filter(d => d.year === selectedYear - 1);
+
+
+                        // Update selected year text
+                        d3.select("#selectedYearText").text(selectedYear);
+
+                        // Update circles for the current year
+                        svg.selectAll(".currentYearCircle")
+                            .data(currentYearData)
+                            .join("circle")
+                            .attr("class", "currentYearCircle")
+                            .attr("cx", d => x(d.lowcarbonDiff))
+                            .attr("cy", d => y(d.fossilDiff))
+                            .attr("r", 0)
+                            .style("fill", "#5300BF")
+                            .style("stroke", "white") 
+                            .style("stroke-width", 0.8)
+                            .style("opacity", 0.5)
+                            .on("mouseover", (event, d) => showTooltip(d, event))
+                            .on("mouseout", hideTooltip)
+                            .transition()
+                            .duration(400)
+                            .style("opacity", 0.9)
+                            .attr("r", 4.5);
+
+                        // Update circles for the previous year
+                        svg.selectAll(".prevYearCircle")
+                            .data(prevYearData)
+                            .join("circle")
+                            .attr("class", "prevYearCircle")
+                            .attr("cx", d => x(d.lowcarbonDiff))
+                            .attr("cy", d => y(d.fossilDiff))
+                            .attr("r", 4.5)
+                            .style("opacity", 0.9)
+                            .style("fill", "#5300BF")
+                            .style("stroke", "white") 
+                            .style("stroke-width", 0.8)
+                            .on("mouseover", (event, d) => showTooltip(d, event))
+                            .on("mouseout", hideTooltip)
+                            .transition()
+                            .duration(400)
+                            .style("opacity", 0.5)
+                            .attr("r", 2.5);
+
+
+                        // Update line path for each data point in the current year
+                        svg.selectAll(".linePath")
+                            .data(currentYearData)
+                            .join("path")
+                            .attr("class", "linePath")
+                            .attr("d", d => {
+                                const lineData = [
+                                    [x(0), y(0)], // Start from the position of circles in 1992
+                                    [x(d.lowcarbonDiff), y(d.fossilDiff)] // End at the position of circles in the selected year
+                                ];
+                                const lineGenerator = d3.line();
+                                return lineGenerator(lineData);
+                            })
+                            .style("fill", "none")
+                            .style("stroke", "#5300BF")
+                            .style("stroke-width", 0.5)
+                            .style("opacity", 0.3);
+                    }
+
+                    // Initial update with data for 1992
+                    updateCircles(1992);
+
+                    // Event listener for slider change
+                    d3.select("#yearSlider").on("input", function () {
+                        const selectedYear = +this.value; // Get the selected year from the slider
+                        updateCircles(selectedYear); // Update the circles based on the selected year
+                    });
+                });
+        </script>
+    </div>
+    <div class="main-content">
+        <h2>About the Data</h2>
+        <p>The dataset utilized for this visualization comprises Primary Energy Consumption data, sourced from Our World in Data. It encompasses country-level data measured in terawatt-hours (TWh) categorized by the type of energy source, spanning from 1965 to 2022.</p>
+        <p>Citation for Data Source: <i>U.S. Energy Information Administration (2023); Energy Institute - Statistical Review of World Energy (2023) – with substantial processing conducted by Our World in Data. "Primary energy consumption" [dataset]. U.S. Energy Information Administration, "International Energy Data"; Energy Institute, "Statistical Review of World Energy" [original data].</i></p>
+        <p>It's important to note that this dataset contains entries with null values for certain countries, these were not excluded. In each iteration, these null data points are depicted at the origin point as a 0 TWh difference each year. Furthermore, it's essential to acknowledge that the dataset may not comprehensively cover all nations that are signatories to international agreements and are not represented in the visualization.</p>
+        <p>For the purpose of this visualization, two primary categories were defined: fossil fuel sources, encompassing oil, coal, and natural gas; and low-carbon sources, including wind, solar, hydroelectric, biomass, other renewables, and nuclear energy. The dataset was filtered to commence from 1992, aligning with the establishment of the UNFCCC. Rather than depicting year-by-year changes, the visualization calculates the difference from 1992, offering a relative measure of progress anchored in that pivotal year. Given the significant variations in energy consumption magnitudes across countries, a logarithmic scale was employed to accurately represent these disparities.</p>
+    </div>
+    <div class="main-content">
+        <h3>Created by Tina Rosado</h3>
+        
+    </div>
+    <div>
+
+</body>
+
+</html>
