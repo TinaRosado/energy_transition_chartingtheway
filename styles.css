@@ -1,28 +1,52 @@
+body {
+    background-color: rgba(240, 162, 2, 0.04);
+    color: #5a4e69;
+}
+
 .grid-layout {
     display: grid; 
-    grid-template-columns: 0.25fr 1fr 0.25fr; 
+    grid-template-columns: minmax(90px, 0.25fr) minmax(0, min(1000px, 70vw)) minmax(90px, 0.25fr);
     gap: 20px; 
     padding: 10px;
 }
 
 .title{
     grid-column: 2 / span 1;
+    grid-row: 1;
 }
 
 .title-image{
-    grid-column: 1 / span 1;
+    grid-column: 3 / span 1;
+    grid-row: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
 }
 
-/* For Chrome, Safari, and Opera */
-#yearSlider::-webkit-slider-thumb {
-    background-color: #5300BF; /* Set the color of the slider bubble */
+.title-image img {
+    max-width: 80px;
+    transform: rotate(-3deg);
 }
 
+#yearSlider {
+    width: 100%;
+    max-width: 760px;
+    min-width: 0;
+    flex: 1;
+    accent-color: #5300BF;
+    vertical-align: middle;
+}
+
+.year-slider-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(100%, 900px);
+    margin-inline: auto;
+}
 
 #selectedYearText {
+    flex: 0 0 auto;
     font-family: "Jura", sans-serif; /* Use the Jura font */
     font-weight: 700; /* Set font weight */
     font-style: normal; /* Set font style */
@@ -32,26 +56,376 @@
 
 .main-content{
     grid-column: 2 / span 1;
+    min-width: 0;
 }
 
-svg {
-    background-image: url("backgroundDLayer3.png");
-    background-size: cover;
-    background-repeat: no-repeat;
+.chart-help {
+    margin-top: 8px;
+    margin-bottom: 24px;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 14px;
+    color: #5a4e69;
 }
 
-.tooltip {
-    position: absolute;
-    text-align: left;
+.chart-help summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 200;
+    list-style: none;
+}
+
+.chart-help summary::-webkit-details-marker {
+    display: none;
+}
+
+.chart-help summary::before {
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    content: "";
+    opacity: 0.65;
+    transform: rotate(-45deg);
+    transition: transform 180ms ease;
+}
+
+.chart-help[open] summary::before {
+    transform: rotate(45deg);
+}
+
+.chart-instructions {
+    margin: 8px 0;
+    color: #5a4e69;
+}
+
+.chart-svg {
+    display: block;
+    width: min(100%, 900px);
+    height: auto;
+    margin-inline: auto;
+    overflow: visible;
+    background-color: transparent;
+}
+
+.radial-grid circle {
+    stroke: #d8d1df;
+    stroke-width: 0.8;
+    fill: none;
+}
+
+.radial-grid text {
+    font-family: "Jura", sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    fill: #5300BF;
+}
+
+.axis-directions line {
+    stroke: #5300BF;
+    stroke-width: 1.4;
+}
+
+#axis-arrow path {
+    fill: #5300BF;
+}
+
+.world-direction-line {
+    stroke: #f0a202;
+    stroke-width: 1;
+    stroke-linecap: round;
+}
+
+.world-direction-label {
+    fill: #f0a202;
+    font-family: "Jura", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.origin-point {
+    fill: #5300BF;
+    stroke: #fff;
+    stroke-width: 1;
+}
+
+.axis-directions text {
+    font-family: "Jura", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    fill: #5300BF;
+}
+
+.current-year-circle,
+.previous-year-circle {
+    cursor: pointer;
+    stroke: #fff;
+    stroke-width: 0.8;
+    transition: opacity 150ms ease;
+}
+
+.current-year-circle {
+    fill: #5300BF;
+}
+
+.previous-year-circle {
+    fill: #5300BF;
+}
+
+.current-year-circle.no-data-circle,
+.previous-year-circle.no-data-circle {
+    fill: #fff;
+    stroke: #777;
+    stroke-dasharray: 1.5 1;
+    stroke-width: 1.2;
+}
+
+.current-year-circle:focus,
+.previous-year-circle:focus,
+.current-year-circle.is-selected,
+.previous-year-circle.is-selected {
+    outline: none;
+}
+
+
+
+.trajectory-point {
+    fill: #5300BF;
+    stroke: #fff;
+    stroke-width: 0.8;
+}
+
+.bearing-distance {
+    fill: none;
+    stroke: #f0a202;
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+}
+
+.selected-country-ring {
+    fill: none;
+    stroke: #f0a202;
+    stroke-width: 0.6;
+}
+
+.bearing-line {
+    stroke: #f0a202;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.country-direction-label {
+    fill: #f0a202;
+    font-family: "Jura", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.data-error {
+    color: #9c1c1c;
+    font-weight: 600;
+}
+
+.country-details {
+    justify-self: center;
+    width: min(100%, 900px);
+    min-width: 0;
+    box-sizing: border-box;
     padding: 8px;
     font-family: 'Gill Sans', sans-serif;
     font-size: 10px;
     color: #5300BF;
-    background: white;
-    border: 0px;
-    border-radius: 8px;
-    pointer-events: none; /* Don't interfere with mouse events */
-    opacity: 0; /* Start invisible */
+    background: transparent;
+}
+
+.country-details-table-wrap {
+    width: 100%;
+    min-width: 0;
+}
+
+.country-details-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font: inherit;
+}
+
+.country-details-table .entity-column {
+    width: 22%;
+}
+
+.country-details-table .change-column {
+    width: 15%;
+}
+
+.country-details-table .total-column {
+    width: 16%;
+}
+
+.country-details-table th,
+.country-details-table td {
+    padding: 4px 5px;
+    text-align: left;
+}
+
+.country-details-table thead th {
+    white-space: normal;
+}
+
+.country-details-table thead tr:first-child th:not(:first-child) {
+    color: #f0a202;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.country-details-table thead tr:nth-child(2) th {
+    color: #5300BF;
+    font-weight: 600;
+}
+
+.country-details-table tbody th,
+.country-details-table tbody td {
+    border-top: 1px solid rgba(83, 0, 191, 0.12);
+}
+
+#selectedCountryDetails th,
+#selectedCountryDetails td {
+    border-top: 0;
+}
+
+.country-details-table tbody th[scope="row"] {
+    color: #f0a202;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.country-details-table tbody td:not([colspan]) {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.country-details-table .no-data-message {
+    color: #5300BF;
+    font-size: 9px;
+    font-weight: 400;
+    text-align: left;
+    white-space: normal;
+}
+
+#countryNoDataRow th,
+#countryNoDataRow td {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.country-search-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+    z-index: 1;
+}
+
+.country-search-wrap:focus-within,
+.country-search-wrap:has(.country-options:not([hidden])) {
+    z-index: 5;
+}
+
+.country-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 7px;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: #f0a202;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.country-search-wrap.is-selected .country-search-icon {
+    display: none;
+}
+
+.country-search {
+    appearance: none;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+    margin: 0;
+    padding: 2px 5px 2px 25px;
+    border: none;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #f0a202;
+    font: inherit;
+    font-weight: 400;
+}
+
+.country-search::placeholder {
+    color: #f0a202;
+    opacity: 1;
+}
+
+.country-search.is-selected {
+    font-weight: 400;
+}
+
+.country-search-wrap.is-selected .country-search {
+    padding-left: 5px;
+}
+
+.country-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 10;
+    box-sizing: border-box;
+    width: clamp(220px, 60vw, 320px);
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid rgba(83, 0, 191, 0.2);
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(34, 20, 50, 0.16);
+}
+
+.country-option {
+    display: block;
+    width: 100%;
+    padding: 6px 9px;
+    border: 0;
+    background: transparent;
+    color: #5a4e69;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.country-option:hover,
+.country-option.is-active {
+    background: rgba(83, 0, 191, 0.08);
+    color: #5300BF;
+}
+
+.country-options-empty {
+    padding: 7px 9px;
+    color: #5a4e69;
+    font-size: 12px;
+}
+
+.country-search:focus {
+    outline: none;
 }
 
 
@@ -71,7 +445,7 @@ h2{
     font-weight: 200;
     font-style: normal;
     font-size: 27px;
-    color:black;
+    color:#5a4e69;
 
 }
 
@@ -94,8 +468,38 @@ p {
     
 }
 
+@media (max-width: 760px) {
+    .grid-layout {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px 12px;
+        padding: 12px;
+    }
 
+    .main-content {
+        grid-column: 1 / -1;
+    }
 
+    .title-image {
+        grid-column: 2;
+        grid-row: 1;
+        justify-content: flex-end;
+    }
+
+    .title {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: center;
+    }
+
+    .title-image img {
+        width: clamp(40px, 12vw, 64px);
+    }
+
+    h1 {
+        font-size: clamp(28px, 7vw, 38px);
+    }
+
+}
 
 /* 
 // <uniquifier>: Use a unique and descriptive class name
