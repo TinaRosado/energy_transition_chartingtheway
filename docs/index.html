@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Consumption Difference from 1992</title>
+    <link rel="icon" type="image/png" href="./assets/compass-lightbulb-purple-B0Fb0Xu8.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-CufkWOAm.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-D94Z7pAI.css">
+</head>
+
+<body class="grid-layout">
+    <div class="title-image">
+        <img src="./assets/compass-lightbulb-purple-B0Fb0Xu8.png" alt="Bright purple compass and lightbulb icon">
+    </div>
+    <div class="title">
+        <h1>Charting the Way</h1>
+    </div>
+
+    <div class="main-content">
+        <h2>Reflecting on Three Decades of Energy Transition</h2>
+        <p>In 1992, the adoption of the United Nations Framework Convention on Climate Change (UNFCCC) marked a pivotal moment in international recognition of the climate change challenge and the need to address greenhouse gas emissions. This growing recognition of the scientific evidence helped drive international action, culminating in the adoption of the Kyoto Protocol in December 1997, which established legally binding emission reduction commitments for participating developed countries.</p>
+        <p>Three decades later, which way are we heading?</p>
+        <p>This exploratory visualization offers a compass for examining the changing directions of global energy use since 1992. By distinguishing between fossil fuel sources and low-carbon alternatives, it reveals how countries have moved along different paths in their energy transition. Some have continued to increase their reliance on fossil fuels, while others have begun to shift towards low-carbon energy sources.</p>
+        <p>Countries have followed different paths since 1992. Which countries have continued to increase fossil fuel use, and which have changed direction? For those that have, in what year did the shift become visible? Explore the chart to compare countries' trajectories and consider how their histories, policies, and circumstances may have shaped these patterns. The chart invites exploration, but does not, by itself, explain the causes.</p>
+        <p>We invite you to explore the results of three decades of human endeavor. Take a few minutes to discover the different trajectories countries have followed, reflect on the progress made, and consider the challenges that remain in addressing one of humanity's greatest challenges.</p>
+    </div>
+
+    <div id="sliderSection" class="main-content">
+        <details class="chart-help">
+            <summary>How to read this chart</summary>
+            <p class="chart-instructions">The chart acts as a compass for exploring changes in energy use relative to 1992. Move the slider to explore how countries' energy trajectories have evolved over time.</p>
+            <p class="chart-instructions">The purple quadrant highlights the direction associated with an energy transition: increasing low-carbon energy use alongside decreasing fossil fuel use. The orange line indicates the direction of change for the World.</p>
+            <p class="chart-instructions">Hover over or focus on a country marker to highlight its direction. Select a country to display its historical positions and values, or search for it in the table. Select it again to clear the selection. Hollow gray markers indicate missing data.</p>
+        </details>
+        <div class="year-slider-control">
+            <span id="selectedYearText">1992</span>
+            <input type="range" id="yearSlider" min="1992" max="2025" step="1" value="1992" aria-label="Select year">
+        </div>
+    </div>
+
+    <section id="countryDetails" class="main-content country-details" aria-label="Country and World energy details" aria-live="polite">
+        <div class="country-details-table-wrap">
+            <table class="country-details-table">
+                <colgroup>
+                    <col class="entity-column">
+                    <col class="change-column">
+                    <col class="change-column">
+                    <col class="total-column">
+                    <col class="total-column">
+                    <col class="total-column">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col" rowspan="2">Entity</th>
+                        <th scope="colgroup" colspan="2">Change since 1992 (TWh)</th>
+                        <th scope="colgroup" colspan="3">Total (TWh)</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Low-carbon</th>
+                        <th scope="col">Fossil fuels</th>
+                        <th scope="col">Low-carbon</th>
+                        <th scope="col">Fossil fuels</th>
+                        <th scope="col">All sources</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="worldDetailsRow">
+                        <th scope="row">World</th>
+                        <td id="worldLowCarbonChange"></td>
+                        <td id="worldFossilChange"></td>
+                        <td id="worldLowCarbonTotal"></td>
+                        <td id="worldFossilTotal"></td>
+                        <td id="worldCombinedTotal"></td>
+                    </tr>
+                    <tr id="selectedCountryDetails">
+                        <th scope="row">
+                            <span class="country-search-wrap">
+                                <svg class="country-search-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                    <circle cx="7" cy="7" r="4.5"></circle>
+                                    <path d="m10.5 10.5 4 4"></path>
+                                </svg>
+                                <input id="countrySearch" class="country-search" type="search" placeholder="Search country" autocomplete="off" aria-label="Search or select a country" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="countryOptions" aria-expanded="false">
+                                <div id="countryOptions" class="country-options" role="listbox" aria-label="Country suggestions" hidden></div>
+                            </span>
+                        </th>
+                        <td id="countryLowCarbonChange"></td>
+                        <td id="countryFossilChange"></td>
+                        <td id="countryLowCarbonTotal"></td>
+                        <td id="countryFossilTotal"></td>
+                        <td id="countryCombinedTotal"></td>
+                    </tr>
+                    <tr id="countryNoDataRow" hidden>
+                        <th></th>
+                        <td id="countryNoDataMessage" colspan="5" class="no-data-message"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div id="my_dataviz" class="main-content"></div>
+
+    <div class="main-content">
+        <h2>About the Data</h2>
+        <p>This visualization uses Our World in Data's primary energy use by source dataset, measured in terawatt-hours (TWh), with data through 2025. It shows changes in energy use for individual countries and the World relative to a 1992 baseline.</p>
+        <p>Countries without reported source data for the selected year, or without a positive total energy use in 1992, remain visible as hollow gray markers at the origin. These are identified as having no data rather than being treated as having zero consumption.</p>
+        <p><strong>Citation for Data Source:</strong> <i>Energy Institute – Statistical Review of World Energy (2026); Smil (2017), with major processing by Our World in Data. Primary energy use by source [dataset].</i></p>
+        <p>Fossil fuels combine gas, oil, and coal. Low-carbon sources combine other renewables, biofuels, solar, wind, hydropower, and nuclear energy. These categories follow the dataset's classification; the inclusion of a source in the low-carbon category does not imply that all sources have identical lifecycle emissions or climate impacts. Blank source values are treated as zero when summing these categories.</p>
+        <p>The World direction is shown as an orange line without an endpoint marker. When its value extends beyond the country-scale plot, the line reaches the chart boundary.</p>
+        <p>The dataset is filtered to start in 1992, the year the UNFCCC was adopted. Rather than depicting year-by-year changes, the visualization calculates the difference between each year's energy use and the 1992 baseline. Because these changes vary widely in magnitude, a symmetric logarithmic (symlog) scale is used to represent both positive and negative differences.</p>
+    </div>
+
+    <div class="main-content">
+        <h3>Created by Tina Rosado</h3>
+    </div>
+</body>
+
+</html>

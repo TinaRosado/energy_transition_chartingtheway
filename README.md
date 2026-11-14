@@ -33,6 +33,10 @@ npm run dev
 
 Open the local URL printed by Vite. To create and preview a production build, run `npm run build` and `npm run preview`.
 
+## Deploy to GitHub Pages
+
+The production build is written to `docs/` with relative asset paths so it works from the repository's Pages URL. In the repository's **Settings → Pages**, set the source to **Deploy from a branch**, select `main`, and choose `/docs` as the folder. Run `npm run build` and include the updated `docs/` output in each commit that should be published.
+
 ## Using the visualization
 
 Use the year slider to view each country's change in low-carbon and total fossil energy since 1992. The details table shows World values and a country search in the first column. Its Change group has low-carbon and fossil-fuel subcolumns; its Total group shows low-carbon, fossil fuels, and an all-sources sum. Search for or select a country, or click a chart marker, to show its values in the aligned row beside the search field. Hover or keyboard-focus a country to highlight its bearing. Selecting a country dims the others and reveals its past yearly coordinates as small circles through the year before the selected year; its values stay visible as the year changes. Clear the search field or click the selected country again to restore the full view.
